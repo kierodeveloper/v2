@@ -1,0 +1,51 @@
+# importamos las librerias necesarias para flask  
+from flask import Flask, escape, request, jsonify, Response
+import pymongo
+import random
+from random import sample
+from json import dumps
+
+# cargamos flask en el entorno 
+app = Flask(__name__)
+
+bebes = {"link_banner":{"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-bebes.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-bebes.webp"},"permalink": "https://listado.kiero.co/listcategory/?id-26137/#Entretenimiento%20para%20Beb%C3%A9s"}
+
+camaras = {"link_banner":{"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-camaras.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-camaras.webp"},'permalink':"https://listado.kiero.co/listcategory/?id-28543/#Camaras"}
+
+computadoras = {"link_banner": {"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-computacion.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-computacion.webp"},'permalink':'https://listado.kiero.co/listcategory/?id-26761/#Computadoras'}
+
+futbol =  {"link_banner":{"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-deportes.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-deportes.webp"} ,'permalink':"https://listado.kiero.co/listcategory/?id-30014/#F%C3%BAtbol"}
+
+com_electronicos = {"link_banner":{"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-electronica.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-electronica.webp"},"permalink":'https://listado.kiero.co/listcategory/?id-50122/#Componentes-electronicos'}
+
+oficinas = {"link_banner":{"jpg":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-oficina.jpg","webp":"https://resourcekiero.s3-us-west-2.amazonaws.com/banner-3/banner-oficina.webp"},"permalink":"https://listado.kiero.co/listcategory/?id-26336/#Equipamiento-para-oficinas"}
+
+
+# array de links para las imagenes JPG
+_json_jpg = [bebes,camaras,computadoras,futbol,com_electronicos,oficinas]
+# array de links para las imagenes WEBP
+
+_json_webp = []
+
+
+# Creamos las rutas de acceso web, la uri
+@app.route('/')
+def build_products():
+    
+    # Creamos el aleatorio de las imagenes
+    RANDOM1, RANDOM2, RANDOM3 = random.sample(_json_jpg, 3)
+
+    # Creamos el objeto json
+    _json = {
+        "code": 1,
+        "result":[RANDOM1,RANDOM2,RANDOM3]
+    }
+    __return = Response(dumps(_json),status=200, mimetype='application/json') 
+    __return.headers['Access-Control-Allow-Origin'] = '*'
+    __return.headers['Access-Control-Allow-Methods'] = 'GET'
+    __return.headers['Allow'] = 'GET'
+    return __return
+
+
+if __name__ == "__main__":
+    app.run(host="10.4.28.90",debug=True)
